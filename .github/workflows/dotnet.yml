@@ -32,5 +32,5 @@ jobs:
         prerelease: false
         title: latest
         files: |
-          ${{ github.workspace }}/bin/Release/net8.0/linux-x64/NetCoreSvchost
-          ${{ github.workspace }}/bin/Release/net8.0/linux-x64/appsettings.json
+          ${{ github.workspace }}/bin/Release/net8.0/linux-x64/publish/NetCoreSvchost
+          ${{ github.workspace }}/bin/Release/net8.0/linux-x64/publish/appsettings.json
