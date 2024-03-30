@@ -32,6 +32,3 @@ jobs:
       with:
         tag_name: latest-win-x64
         prerelease: false
-        files: |
-          *.exe
-          appsettings.json
