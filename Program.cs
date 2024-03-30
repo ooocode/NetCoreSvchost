@@ -1,7 +1,8 @@
-using System.Runtime.InteropServices;
-using System.Text.Json.Serialization;
+using NetCoreSvchost.InternalImpl;
+using NetCoreSvchost.Options;
 using Quartz;
 using Quartz.Simpl;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
@@ -24,25 +25,27 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 });
 
 
-List<string> dllNames = [@"C:\Users\94386\Desktop\com\CoreProxy.dll"];
+List<Dll>? dllNames = builder.Configuration.GetSection("Dlls").Get<List<Dll>>();
+ArgumentNullException.ThrowIfNull(dllNames);
+
+dllNames = dllNames.Where(e => !string.IsNullOrWhiteSpace(e.FileName)).DistinctBy(e => e.FileName).ToList();
 
 builder.Services.AddQuartz(q =>
 {
     q.UsePersistentStore<RAMJobStore>(_ => { });
     q.UseDefaultThreadPool();
 
-
-
     foreach (var subscribeItem in dllNames)
     {
-        var jobKey = new JobKey(subscribeItem);
+        nint address = DllList.Add(subscribeItem);
+
+        var jobKey = new JobKey(address.ToString());
         q.AddJob<HandlerJob>(jobKey).AddTrigger(t =>
         {
-            t.StartNow().ForJob(jobKey);
-            /* t.StartNow().WithSimpleSchedule(x => x
-               .WithInterval(grpcListenerOptions.Timeout)
+            t.StartNow().WithSimpleSchedule(x => x
+               .WithInterval(TimeSpan.FromSeconds(10))
                .RepeatForever())
-               .ForJob(jobKey); */
+               .ForJob(jobKey);
         });
     }
 });
@@ -74,6 +77,8 @@ todosApi.MapGet("/{id}", (int id) =>
 app.Run();
 
 public record Todo(int Id, string? Title, DateOnly? DueBy = null, bool IsComplete = false);
+
+
 
 [JsonSerializable(typeof(Todo[]))]
 internal partial class AppJsonSerializerContext : JsonSerializerContext

@@ -1,18 +1,33 @@
-using System.Runtime.InteropServices;
+using NetCoreSvchost.Options;
 using Quartz;
 
-[DisallowConcurrentExecution]
-public class HandlerJob : IJob
+namespace NetCoreSvchost.InternalImpl
 {
-     public  unsafe delegate* unmanaged<string, string, string, void> OnLogAction;
+    public delegate void ServiceMain();
 
-    public delegate void ServiceMain(int argc, nint argv);
-    public Task Execute(IJobExecutionContext context)
+    [DisallowConcurrentExecution]
+    public class HandlerJob : IJob
     {
-        NativeLibrary.TryLoad(@"C:\Users\94386\Desktop\com\CoreProxy.dll", out var ptr);
-        NativeLibrary.TryGetExport(ptr, "ServiceMain", out var address);
-        ServiceMain serviceMain = Marshal.GetDelegateForFunctionPointer<ServiceMain>(ptr);
-        serviceMain(0, nint.Zero);
-        throw new NotImplementedException();
+        private readonly ILogger<HandlerJob> logger;
+
+        public HandlerJob(ILogger<HandlerJob> logger)
+        {
+            this.logger = logger;
+        }
+
+
+        public unsafe Task Execute(IJobExecutionContext context)
+        {
+            nint address = nint.Parse(context.JobDetail.Key.Name);
+            var dll = DllList.List[address];
+
+            var serviceMain = (delegate* unmanaged[Cdecl]<int, nint[], void>)address;
+            ArgumentNullException.ThrowIfNull(serviceMain);
+
+            logger.LogInformation($"开始运行【{context.JobDetail.Key.Name}】");
+
+            serviceMain(dll.Count, dll.ToArray());
+            return Task.CompletedTask;
+        }
     }
 }
