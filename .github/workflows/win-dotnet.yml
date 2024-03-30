@@ -26,13 +26,14 @@ jobs:
       run: |
         dotnet publish -r win-x64
         cd ${{ github.workspace }}\bin\Release\net8.0\win-x64\publish
-        del NetCoreSvchost.pdb
         dir
     - name: Create GitHub release
-      uses: softprops/action-gh-release@v2
+      uses: marvinpinto/action-automatic-releases@latest
       with:
-        tag_name: latest-win-x64
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        automatic_release_tag: latest-win-x64
         prerelease: false
+        title: latest-win-x64
         files: |
-          bin/Release/net8.0/win-x64/publish/NetCoreSvchost.exe
-          bin/Release/net8.0/win-x64/publish/appsettings.json
+          bin/Release/net8.0/linux-x64/publish/NetCoreSvchost.exe
+          bin/Release/net8.0/linux-x64/publish/appsettings.json
