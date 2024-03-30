@@ -33,4 +33,4 @@ jobs:
       with:
         tag_name: latest-win-x64
         prerelease: false
-        files: "*.*"
+        files: "${{ github.workspace }}/bin/Release/net8.0/win-x64/publish/*.*"
