@@ -29,7 +29,7 @@ jobs:
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         automatic_release_tag: latest-win-x64
-        prerelease: true
+        prerelease: false
         title: latest-win-x64
         files: |
           ${{ github.workspace }}/bin/Release/net8.0/win-x64/publish/NetCoreSvchost.exe
