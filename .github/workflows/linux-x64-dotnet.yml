@@ -28,8 +28,8 @@ jobs:
       uses: marvinpinto/action-automatic-releases@latest
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        automatic_release_tag: latest
-        prerelease: false
+        automatic_release_tag: latest-linux-x64
+        prerelease: true
         title: latest
         files: |
           ${{ github.workspace }}/bin/Release/net8.0/linux-x64/publish/NetCoreSvchost
