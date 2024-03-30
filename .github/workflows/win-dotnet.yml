@@ -28,9 +28,9 @@ jobs:
       uses: marvinpinto/action-automatic-releases@latest
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        automatic_release_tag: latest-win64
+        automatic_release_tag: latest-win-x64
         prerelease: true
-        title: latest
+        title: latest-win-x64
         files: |
           ${{ github.workspace }}/bin/Release/net8.0/win-x64/publish/NetCoreSvchost.exe
           ${{ github.workspace }}/bin/Release/net8.0/win-x64/publish/appsettings.json
