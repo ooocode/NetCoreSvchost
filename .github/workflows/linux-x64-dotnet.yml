@@ -29,8 +29,8 @@ jobs:
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         automatic_release_tag: latest-linux-x64
-        prerelease: true
-        title: latest
+        prerelease: false
+        title: latest-linux-x64
         files: |
           ${{ github.workspace }}/bin/Release/net8.0/linux-x64/publish/NetCoreSvchost
           ${{ github.workspace }}/bin/Release/net8.0/linux-x64/publish/appsettings.json
