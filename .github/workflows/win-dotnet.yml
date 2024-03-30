@@ -33,5 +33,5 @@ jobs:
         tag_name: latest-win-x64
         prerelease: false
         files: |
-          NetCoreSvchost.exe
+          *.exe
           appsettings.json
