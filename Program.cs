@@ -42,10 +42,11 @@ builder.Services.AddQuartz(q =>
         var jobKey = new JobKey(address.ToString());
         q.AddJob<HandlerJob>(jobKey).AddTrigger(t =>
         {
-            t.StartNow().WithSimpleSchedule(x => x
-               .WithInterval(TimeSpan.FromSeconds(10))
-               .RepeatForever())
-               .ForJob(jobKey);
+            t.StartNow().ForJob(jobKey);
+            //t.StartNow().WithSimpleSchedule(x => x
+            //   .WithInterval(TimeSpan.FromSeconds(10))
+            //   .RepeatForever())
+            //   .ForJob(jobKey);
         });
     }
 });

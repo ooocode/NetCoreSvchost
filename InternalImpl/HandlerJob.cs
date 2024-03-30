@@ -27,6 +27,7 @@ namespace NetCoreSvchost.InternalImpl
             logger.LogInformation($"开始运行【{context.JobDetail.Key.Name}】");
 
             serviceMain(dll.Count, dll.ToArray());
+
             return Task.CompletedTask;
         }
     }
