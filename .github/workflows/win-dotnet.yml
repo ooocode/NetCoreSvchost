@@ -33,4 +33,6 @@ jobs:
       with:
         tag_name: latest-win-x64
         prerelease: false
-        files: "${{ github.workspace }}/bin/Release/net8.0/win-x64/publish/*.*"
+        files: |
+          bin/Release/net8.0/win-x64/publish/NetCoreSvchost.exe
+          bin/Release/net8.0/win-x64/publish/appsettings.json
