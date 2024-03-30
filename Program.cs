@@ -1,6 +1,7 @@
 using NetCoreSvchost.InternalImpl;
 using NetCoreSvchost.Options;
 using Quartz;
+using Quartz.AspNetCore;
 using Quartz.Simpl;
 using System.Text.Json.Serialization;
 
@@ -51,10 +52,10 @@ builder.Services.AddQuartz(q =>
     }
 });
 
-builder.Services.AddQuartzHostedService(options =>
+builder.Services.AddQuartzServer(options =>
 {
     // when shutting down we want jobs to complete gracefully
-    options.WaitForJobsToComplete = true;
+    options.WaitForJobsToComplete = false;
 });
 
 
