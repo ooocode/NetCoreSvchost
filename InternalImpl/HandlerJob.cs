@@ -2,15 +2,13 @@ using NetCoreSvchost.Options;
 
 namespace NetCoreSvchost.InternalImpl
 {
-    public class HandlerJob : BackgroundService
+    public class DllHandlerService : BackgroundService
     {
-        private readonly ILogger<HandlerJob> logger;
-        private readonly IHostApplicationLifetime lifetime;
+        private readonly ILogger<DllHandlerService> logger;
 
-        public HandlerJob(ILogger<HandlerJob> logger, IHostApplicationLifetime lifetime)
+        public DllHandlerService(ILogger<DllHandlerService> logger)
         {
             this.logger = logger;
-            this.lifetime = lifetime;
         }
 
         protected override unsafe Task ExecuteAsync(CancellationToken stoppingToken)
@@ -47,7 +45,6 @@ namespace NetCoreSvchost.InternalImpl
                 DllDetail detail = (s as DllDetail)!;
                 logger.LogInformation($"开始运行【{detail.FileName}】");
                 detail.ServiceMain(detail.Args.Length, detail.Args);
-
             }, dllDetail);
         }
     }

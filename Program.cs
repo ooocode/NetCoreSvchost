@@ -13,7 +13,7 @@ else if (Microsoft.Extensions.Hosting.Systemd.SystemdHelpers.IsSystemdService())
     builder.Services.AddSystemd();
 }
 
-builder.Services.AddHostedService<HandlerJob>();
+builder.Services.AddHostedService<DllHandlerService>();
 
 var app = builder.Build();
 app.Run();
