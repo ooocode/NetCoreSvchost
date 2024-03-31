@@ -33,4 +33,4 @@ jobs:
         title: latest-linux-x64
         files: |
           ${{ github.workspace }}/bin/Release/net8.0/linux-x64/publish/NetCoreSvchost
-          ${{ github.workspace }}/bin/Release/net8.0/linux-x64/publish/appsettings.json
+          ${{ github.workspace }}/bin/Release/net8.0/linux-x64/publish/dlls.json
