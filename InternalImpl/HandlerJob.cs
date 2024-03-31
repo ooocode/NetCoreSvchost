@@ -1,34 +1,54 @@
 using NetCoreSvchost.Options;
-using Quartz;
 
 namespace NetCoreSvchost.InternalImpl
 {
-    public delegate void ServiceMain();
-
-    [DisallowConcurrentExecution]
-    public class HandlerJob : IJob
+    public class HandlerJob : BackgroundService
     {
         private readonly ILogger<HandlerJob> logger;
+        private readonly IHostApplicationLifetime lifetime;
 
-        public HandlerJob(ILogger<HandlerJob> logger)
+        public HandlerJob(ILogger<HandlerJob> logger, IHostApplicationLifetime lifetime)
         {
             this.logger = logger;
+            this.lifetime = lifetime;
         }
 
-
-        public unsafe Task Execute(IJobExecutionContext context)
+        protected override unsafe Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            nint address = nint.Parse(context.JobDetail.Key.Name);
-            var dll = DllList.List[address];
+            var fileName = Path.Combine(AppContext.BaseDirectory, "dlls.json");
+            var text = File.ReadAllText(fileName);
+            var dllList = System.Text.Json.JsonSerializer.Deserialize(text, AppJsonSerializerContext.Default.DllList);
+            ArgumentNullException.ThrowIfNull(dllList);
 
-            var serviceMain = (delegate* unmanaged[Cdecl]<int, nint[], void>)address;
-            ArgumentNullException.ThrowIfNull(serviceMain);
+            List<DllDetail> dllDetails = new List<DllDetail>();
+            foreach (var dll in dllList.Dlls)
+            {
+                var dllDetail = Dll.GetDllDetail(dll);
+                dllDetails.Add(dllDetail);
 
-            logger.LogInformation($"开始运行【{context.JobDetail.Key.Name}】");
+                HandlerDll(dllDetail);
+            }
 
-            serviceMain(dll.Count, dll.ToArray());
+            stoppingToken.Register(() =>
+            {
+                foreach (var item in dllDetails)
+                {
+                    item.ServiceStop();
+                }
+            });
 
             return Task.CompletedTask;
+        }
+
+        private unsafe void HandlerDll(DllDetail dllDetail)
+        {
+            ThreadPool.QueueUserWorkItem((s) =>
+            {
+                DllDetail detail = (s as DllDetail)!;
+                logger.LogInformation($"开始运行【{detail.FileName}】");
+                detail.ServiceMain(detail.Args.Length, detail.Args);
+
+            }, dllDetail);
         }
     }
 }
