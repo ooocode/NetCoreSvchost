@@ -36,4 +36,4 @@ jobs:
         title: latest-win-x64
         files: |
           bin/Release/net8.0/win-x64/publish/NetCoreSvchost.exe
-          bin/Release/net8.0/win-x64/publish/appsettings.json
+          bin/Release/net8.0/win-x64/publish/dlls.json
