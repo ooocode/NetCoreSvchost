@@ -1,7 +1,7 @@
 ## 内部使用，请勿下载
 
 ### C#实现Dll,导出连个函数
-分别是主服务入库和服务停止函数
+分别是主服务入口、停止
 
 ```csharp
 [UnmanagedCallersOnly(EntryPoint = "ServiceMain", CallConvs = [typeof(CallConvCdecl)])]
