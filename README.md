@@ -1,3 +1,8 @@
+## 内部使用，请勿下载
+
+### C#实现Dll,导出连个函数
+分别是主服务入库和服务停止函数
+
 ```csharp
 [UnmanagedCallersOnly(EntryPoint = "ServiceMain", CallConvs = [typeof(CallConvCdecl)])]
 public static unsafe void ServiceMain(int argc, nint* argv)
@@ -11,16 +16,11 @@ public static unsafe void ServiceMain(int argc, nint* argv)
             args.Add(arg);
         }
     }
-
-    RunMain(args.ToArray());
 }
 
 [UnmanagedCallersOnly(EntryPoint = "ServiceStop", CallConvs = [typeof(CallConvCdecl)])]
 public static void ServiceStop()
 {
-  if (host != null)
-  {
-    host.StopAsync();
-  }
+
 }
 ```
