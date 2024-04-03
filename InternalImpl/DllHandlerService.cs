@@ -11,6 +11,8 @@ namespace NetCoreSvchost.InternalImpl
             this.logger = logger;
         }
 
+        private List<DllDetail> dllDetails = new List<DllDetail>();
+
         protected override unsafe Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var fileName = Path.Combine(AppContext.BaseDirectory, "dlls.json");
@@ -18,7 +20,6 @@ namespace NetCoreSvchost.InternalImpl
             var dllList = System.Text.Json.JsonSerializer.Deserialize(text, AppJsonSerializerContext.Default.DllList);
             ArgumentNullException.ThrowIfNull(dllList);
 
-            List<DllDetail> dllDetails = new List<DllDetail>();
             foreach (var dll in dllList.Dlls)
             {
                 var dllDetail = Dll.GetDllDetail(dll);
@@ -26,14 +27,6 @@ namespace NetCoreSvchost.InternalImpl
 
                 HandlerDll(dllDetail);
             }
-
-            stoppingToken.Register(() =>
-            {
-                foreach (var item in dllDetails)
-                {
-                    item.ServiceStop();
-                }
-            });
 
             return Task.CompletedTask;
         }
@@ -46,6 +39,16 @@ namespace NetCoreSvchost.InternalImpl
                 logger.LogInformation($"开始运行【{detail.FileName}】");
                 detail.ServiceMain(detail.Args.Length, detail.Args);
             }, dllDetail);
+        }
+
+        public override unsafe Task StopAsync(CancellationToken cancellationToken)
+        {
+            foreach (var item in dllDetails)
+            {
+                item.ServiceStop();
+            }
+
+            return base.StopAsync(cancellationToken);
         }
     }
 }
