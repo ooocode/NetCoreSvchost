@@ -25,7 +25,6 @@ jobs:
     - name: Publish
       run: |
         dotnet publish -r win-x64
-        cd ${{ github.workspace }}\bin\Release\net8.0\win-x64\publish
         dir
     - name: Create GitHub release
       uses: marvinpinto/action-automatic-releases@latest
