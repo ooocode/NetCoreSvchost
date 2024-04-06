@@ -1,11 +1,7 @@
 {
   "Dlls": [
     {
-      "FileName": "C:\\Users\\94386\\Desktop\\新建文件夹 (13)\\新建文件夹\\CoreProxy\\bin\\Release\\net8.0\\publish\\CoreProxy.dll",
-      "Args": [ "发放155", "发放时556" ]
-    },
-    {
-      "FileName": "C:/Users/94386/Desktop/新建文件夹 (13)/新建文件夹/SystemAutoTool/bin/Release/net8.0/publish/win-x64/SystemAutoTool.dll",
+      "FileName": "/home/pi/Desktop/proxy/CoreProxy.so",
       "Args": [ "发放155", "发放时556" ]
     }
   ]
