@@ -11,12 +11,17 @@ namespace NetCoreSvchost.InternalImpl
             this.logger = logger;
         }
 
-        private List<DllDetail> dllDetails = new List<DllDetail>();
+        private readonly List<DllDetail> dllDetails = [];
 
-        protected override unsafe Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var fileName = Path.Combine(AppContext.BaseDirectory, "dlls.json");
-            var text = File.ReadAllText(fileName);
+            if (!File.Exists(fileName))
+            {
+                throw new FileNotFoundException("file not found", fileName);
+            }
+
+            var text = await File.ReadAllTextAsync(fileName, stoppingToken);
             var dllList = System.Text.Json.JsonSerializer.Deserialize(text, AppJsonSerializerContext.Default.DllList);
             ArgumentNullException.ThrowIfNull(dllList);
 
@@ -27,8 +32,6 @@ namespace NetCoreSvchost.InternalImpl
 
                 HandlerDll(dllDetail);
             }
-
-            return Task.CompletedTask;
         }
 
         private unsafe void HandlerDll(DllDetail dllDetail)
@@ -36,7 +39,7 @@ namespace NetCoreSvchost.InternalImpl
             ThreadPool.QueueUserWorkItem((s) =>
             {
                 DllDetail detail = (s as DllDetail)!;
-                logger.LogInformation($"开始运行【{detail.FileName}】");
+                logger.LogInformation($"start execute {detail.FileName}");
                 detail.ServiceMain(detail.Args.Length, detail.Args);
             }, dllDetail);
         }

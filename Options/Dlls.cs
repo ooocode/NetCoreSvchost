@@ -14,6 +14,11 @@ namespace NetCoreSvchost.Options
 
         public static DllDetail GetDllDetail(Dll dll)
         {
+            if (!File.Exists(dll.FileName))
+            {
+                throw new DllNotFoundException(dll.FileName);
+            }
+
             if (!NativeLibrary.TryLoad(dll.FileName!, out var handle))
             {
                 throw new InvalidOperationException();
