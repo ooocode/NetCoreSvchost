@@ -19,7 +19,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: 9.0.x
     - name: Restore dependencies
       run: dotnet restore
     - name: Publish
@@ -32,5 +32,5 @@ jobs:
         prerelease: false
         title: latest-linux-x64
         files: |
-          ${{ github.workspace }}/bin/Release/net8.0/linux-x64/publish/NetCoreSvchost
-          ${{ github.workspace }}/bin/Release/net8.0/linux-x64/publish/dlls.json
+          ${{ github.workspace }}/bin/Release/net9.0/linux-x64/publish/NetCoreSvchost
+          ${{ github.workspace }}/bin/Release/net9.0/linux-x64/publish/dlls.json
